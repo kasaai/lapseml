@@ -7,3 +7,10 @@ mod_form <- lapse_count ~
   offset(log(exposure_count))
 
 soa2015_model <- glm(mod_form, family = poisson(), data = training_data)
+
+# check for reasonability
+
+broom::augment(soa2015_model, training_data, type.predict = "response") %>%
+  mutate(predicted_lapse_rate = .fitted / exposure_count) %>%
+  select(lapse_count_rate, predicted_lapse_rate, exposure_count) %>%
+  weighted_rmse("lapse_count_rate", "predicted_lapse_rate", "exposure_count")
