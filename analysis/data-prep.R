@@ -43,6 +43,19 @@ premium_jump_ratio_mapping <- tribble(
   "X. 24.01 AND UP",    27.9
 )
 
+risk_class_mapping <- tribble(
+  ~ risk_class,    ~ risk_class_mapped,
+  "Super-Pref NS", "BCNS",
+  "Non-Pref NS",   "NS",
+  "Pref Resid NS", "NS",
+  "Pref Best NS",  "BCNS",
+  "Undiff SM",     "SM",
+  "Non-Pref SM",   "SM",
+  "Pref SM",       "SM",
+  "Undiff NS",     "NS",
+  "Agg/Unknown",   "NS"
+)
+
 data <- insurance::lapse_study %>%
   # Keep only duration 10 - 12 data.
   filter(duration %in% c("10", "11", "12")) %>%
@@ -54,6 +67,8 @@ data <- insurance::lapse_study %>%
   filter(exposure_count > 0, exposure_amount > 0) %>%
   # Join with issue age mapping
   left_join(issue_age_mapping, by = c(issue_age = "age_band")) %>%
+  # risk class mapping for SOA 2015
+  left_join(risk_class_mapping, by = "risk_class") %>%
   # Join with premium jump ratio mapping
   left_join(premium_jump_ratio_mapping, by = c(premium_jump_ratio = "premium_jump_ratio_band")) %>%
   mutate(
