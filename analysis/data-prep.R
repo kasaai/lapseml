@@ -14,8 +14,8 @@ issue_age_mapping <- tribble(
 )
 
 data <- insurance::lapse_study %>%
-  # Keep only duration 10 data.
-  filter(duration == "10") %>%
+  # Keep only duration 10 - 12 data.
+  filter(duration %in% c("10", "11", "12")) %>%
   # Keep only Premium Jump to ART
   filter(post_level_premium_structure == "1. Premium Jump to ART") %>%
   # Remove empty exposures.
@@ -24,7 +24,8 @@ data <- insurance::lapse_study %>%
   left_join(issue_age_mapping, by = c(issue_age = "age_band")) %>%
   mutate(
     lapse_count_rate = lapse_count / exposure_count,
-    lapse_amount_rate = lapse_amount / exposure_amount
+    lapse_amount_rate = lapse_amount / exposure_amount,
+    duration = as.integer(duration)
   )
 
 training_data <- filter(policy_year < 2011)
