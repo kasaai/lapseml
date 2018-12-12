@@ -18,6 +18,8 @@ data <- insurance::lapse_study %>%
   filter(duration %in% c("10", "11", "12")) %>%
   # Keep only Premium Jump to ART
   filter(post_level_premium_structure == "1. Premium Jump to ART") %>%
+  # Keep only known premium jump ratios
+  filter(premium_jump_ratio != "Y. Unknown") %>%
   # Remove empty exposures.
   filter(exposure_count > 0, exposure_amount > 0) %>%
   # Join with issue age mapping
