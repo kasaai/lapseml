@@ -4,13 +4,13 @@ library(tidyverse)
 
 issue_age_mapping <- tribble(
   ~ age_band, ~ average_issue_age,
-  "0-19",     9.5,
-  "20-29",    26.3,
-  "30-39",    34.7,
-  "40-49",    44.2,
-  "50-59",    53.7,
-  "60-69",    63.3,
-  "70+",      72.3
+  "0-19",     10,
+  "20-29",    25,
+  "30-39",    35,
+  "40-49",    45,
+  "50-59",    55,
+  "60-69",    65,
+  "70+",      75,
 )
 
 data <- insurance::lapse_study %>%
@@ -28,5 +28,5 @@ data <- insurance::lapse_study %>%
     duration = as.integer(duration)
   )
 
-training_data <- filter(policy_year < 2011)
-testing_data <- filter(policy_year == 2011)
+training_data <- filter(data, policy_year < 2011)
+testing_data <- filter(data, policy_year == 2011)
