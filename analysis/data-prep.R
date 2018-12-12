@@ -26,3 +26,6 @@ data <- insurance::lapse_study %>%
     lapse_count_rate = lapse_count / exposure_count,
     lapse_amount_rate = lapse_amount / exposure_amount
   )
+
+training_data <- filter(policy_year < 2011)
+testing_data <- filter(policy_year == 2011)
