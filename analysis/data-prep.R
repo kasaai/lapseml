@@ -3,7 +3,7 @@ library(tidyverse)
 # glimpse(insurance::lapse_study)
 
 issue_age_mapping <- tribble(
-  ~ age_band, ~ average_issue_age,
+  ~ age_band, ~ avg_issue_age,
   "0-19",     10,
   "20-29",    25,
   "30-39",    35,
@@ -15,7 +15,7 @@ issue_age_mapping <- tribble(
 
 # Map levels to midpoint of bands per SOA2015
 premium_jump_ratio_mapping <- tribble(
-  ~ premium_jump_ratio_band, ~ average_premium_jump_ratio,
+  ~ premium_jump_ratio_band, ~ avg_premium_jump_ratio,
   "A.  1.01 - 2.00",    1.5,
   "B.  2.01 - 3.00",    2.5,
   "C.  3.01 - 4.00",    3.5,
