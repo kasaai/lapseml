@@ -17,8 +17,11 @@ weighted_rmse <- function(data, truth, estimate, weights) {
 #'
 #' @param df Data frame of predictions and actuals by quantile. Should be the
 #'   return value of `compute_prediction_quantiles()`.
+#' @param orientation this specify the orientation of the graph, Portrait or landscape.
+#'   Default value is Portrait
 #' @export
-plot_actual_vs_expected <- function(df) {
+plot_actual_vs_expected <- function(df, orientation = "portrait") {
+  if(orientation == "portrait"){
   df %>%
     tidyr::gather("key", "value", -"decile") %>%
     ggplot2::ggplot(ggplot2::aes(x = .data$decile, y = .data$value, fill = .data$key)) +
@@ -28,6 +31,17 @@ plot_actual_vs_expected <- function(df) {
     ggplot2::theme(
       axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)
     )
+  } else if(orientation == "landscape") {
+    df %>%
+      tidyr::gather("key", "value", -"decile") %>%
+      ggplot2::ggplot(ggplot2::aes(x = .data$decile, y = .data$value, fill = .data$key)) +
+      ggplot2::geom_bar(stat = "identity", position = "dodge") +
+      ggplot2::ggtitle("Average Actual vs. Predicted Lapse Rates") +
+      ggplot2::xlab("Actual Lapse Rate Decile") +
+      ggplot2::coord_flip()
+  } else{
+    stop("Orientation only takes the value landscape or portrait")
+  }
 }
 
 #' Compute Average Predictions by Quantile
