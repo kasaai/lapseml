@@ -12,7 +12,7 @@ Authors@R: c(
     )
 Maintainer: Kevin Kuo <kevinykuo@gmail.com>
 Description: Companion package for 'Explainable Machine Learning Approaches to Shock Lapse Modeling.'
-License: CC BY-SA 4.0 | file LICENSE
+License: CC BY 4.0 | file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0
