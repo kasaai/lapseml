@@ -6,6 +6,8 @@ author:
     orcid: 0000-0001-7803-7901
   - name: Frankie Logan
     affil: 2
+  - name: Bob Crompton
+    affil: 3
 affiliation:
   - num: 1
     address: |
@@ -15,6 +17,10 @@ affiliation:
     address: |
       KPMG, Wayne, PA, USA
     email: flogan@kpmg.com
+  - num: 3
+    address: |
+      Actuarial Resources Corporation of Georgia, Alpharetta, GA, USA
+    email: bob.crompton@arcga.com
 # firstnote to eighthnote
 correspondence: |
   kevin.kuo@rstudio.com.
@@ -58,11 +64,25 @@ output: rticles::mdpi_article
 
 # Introduction
 
-# Methods
+# Data
+
+Discuss data from @soa2010
+
+# Modeling approaches
+
+## SOA 2015 Report
+
+Discuss model from @soa2015.
 
 # Results
 
+## Evaluation
+
+Discuss evaluation metric and tarin/test split.
+
 # Discussion
+
+## Model explanation
 
 # Conclusion
 
