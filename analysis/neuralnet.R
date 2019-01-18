@@ -121,6 +121,4 @@ validation <- testing_data %>% bind_cols(
 matrices <- validation %>%
   weighted_rmse(truth = "lapse_count_rate", estimate = "predicted_count_rate", weights = "exposure_count")
 
-validation %>%
-  compute_prediction_quantiles("predicted_count_rate", "lapse_count_rate") %>%
-  plot_actual_vs_expected(orientation = "landscape")
+
