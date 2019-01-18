@@ -16,7 +16,7 @@ f <- as.formula(paste(
 ))
 
 rec_nn <- recipe(f, data = training_data) %>%
-  step_string2factor(gender, risk_class_mapped, face_amount, premium_mode) %>%
+  step_integer(gender, risk_class_mapped, face_amount, premium_mode, zero_based = TRUE) %>%
   step_num2factor(duration) %>%
   step_center(avg_issue_age, avg_premium_jump_ratio) %>%
   step_scale(avg_issue_age, avg_premium_jump_ratio) %>%
@@ -25,7 +25,7 @@ rec_nn <- recipe(f, data = training_data) %>%
 # Helper function to create a keras data model,
 # might move to be util.R once model is finalized
 
-make_keras_data <- function(data) {
+make_keras_data <- function(data, predictors, responses) {
   data <- data %>%
     map_if(is.factor, ~ as.integer(.x) - 1) %>%
     map_at("gender", ~ keras::to_categorical(.x, 2) %>% array_reshape(c(length(.x), 2))) %>%
@@ -38,9 +38,9 @@ make_keras_data <- function(data) {
        y = data[responses])
 }
 
-keras_training <- make_keras_data(juice(rec_nn))
-keras_testing <- bake(rec_nn, testing_data) %>%
-  make_keras_data()
+keras_training <- make_keras_data(juice(rec_nn), predictors, responses)
+keras_validation <- bake(rec_nn, validation_data) %>%
+  make_keras_data(predictors, responses)
 
 # Build network.
 # Note that the one-hot encoded inputs will have shape > 1. The rest
@@ -48,7 +48,7 @@ keras_testing <- bake(rec_nn, testing_data) %>%
 input_gender <- layer_input(shape = 2, name = "gender")
 input_issue_age_group <- layer_input(shape = 1, name = "avg_issue_age")
 input_face_amount_band <- layer_input(shape = 1, name = "face_amount")
-input_prem_jump_d11_d10 <- layer_input(shape = 1, name = "avg_premium_jump_ratio")
+input_avg_premium_jump_ratio <- layer_input(shape = 1, name = "avg_premium_jump_ratio")
 input_risk_class <- layer_input(shape = 1, name = "risk_class_mapped")
 input_premium_mode <- layer_input(shape = 6, name = "premium_mode")
 input_duration <- layer_input(shape = 3, name = "duration")
@@ -107,20 +107,20 @@ history <- model %>%
 
 predictions <- predict(
   model,
-  keras_testing$x
+  keras_validation$x
 )
 
 # Summary
 
-validation_summary <- testing_data %>% bind_cols(
+validation <- testing_data %>% bind_cols(
   predictions %>%
     setNames(c("predicted_count_rate", "predicted_amount_rate")) %>%
     as.data.frame()
 )
 
-matrices <- validation_summary %>%
+matrices <- validation %>%
   weighted_rmse(truth = "lapse_count_rate", estimate = "predicted_count_rate", weights = "exposure_count")
 
-validation_summary %>%
+validation %>%
   compute_prediction_quantiles("predicted_count_rate", "lapse_count_rate") %>%
   plot_actual_vs_expected(orientation = "landscape")
