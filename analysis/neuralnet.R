@@ -53,17 +53,20 @@ input_risk_class <- layer_input(shape = 1, name = "risk_class_mapped")
 input_premium_mode <- layer_input(shape = 6, name = "premium_mode")
 input_duration <- layer_input(shape = 3, name = "duration")
 
+embedded_input_risk_class <- input_risk_class %>%
+  layer_embedding(9, 2) %>%
+  layer_flatten()
+embedded_input_face_amount_band <- input_face_amount_band %>%
+  layer_embedding(4, 2) %>%
+  layer_flatten()
+
 concat_inputs <- layer_concatenate(list(
   input_duration,
   input_gender,
   input_issue_age_group,
-  input_face_amount_band %>%
-    layer_embedding(4, 2) %>%
-    layer_flatten(),
-  input_prem_jump_d11_d10,
-  input_risk_class %>%
-    layer_embedding(9, 2) %>%
-    layer_flatten(),
+  embedded_input_face_amount_band,
+  input_avg_premium_jump_ratio,
+  embedded_input_risk_class,
   input_premium_mode
 ))
 
@@ -83,7 +86,7 @@ output_amount_rate <- main_layer %>%
 
 model <- keras_model(
   inputs = c(input_duration, input_gender, input_issue_age_group, input_face_amount_band,
-             input_prem_jump_d11_d10,
+             input_avg_premium_jump_ratio,
              input_risk_class, input_premium_mode),
   outputs = c(output_count_rate, output_amount_rate)
 )
@@ -112,7 +115,7 @@ predictions <- predict(
 
 # Summary
 
-validation <- testing_data %>% bind_cols(
+validation <- validation_data %>% bind_cols(
   predictions %>%
     setNames(c("predicted_count_rate", "predicted_amount_rate")) %>%
     as.data.frame()
