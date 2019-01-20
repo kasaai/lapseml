@@ -123,5 +123,3 @@ validation <- validation_data %>% bind_cols(
 
 matrices <- validation %>%
   weighted_rmse(truth = "lapse_count_rate", estimate = "predicted_count_rate", weights = "exposure_count")
-
-
