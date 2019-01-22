@@ -79,3 +79,4 @@ data <- insurance::lapse_study %>%
 
 training_data <- filter(data, policy_year < 2011)
 testing_data <- filter(data, policy_year == 2011)
+validation_data <- filter(training_data, policy_year >= 2009)

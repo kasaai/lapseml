@@ -13,3 +13,4 @@ weighted_rmse <- function(data, truth, estimate, weights) {
     sum(data[[weights]])
   sqrt(weighted_mse)
 }
+
