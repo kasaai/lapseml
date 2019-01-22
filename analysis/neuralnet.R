@@ -123,7 +123,7 @@ history <- model %>%
     batch_size = 256,
     epochs = 20,
     validation_split = 0.2,
-    sample_weight = keras_training$exposure_count
+    sample_weight = keras_training$weights
   )
 
 plot(history)
