@@ -77,6 +77,8 @@ data <- insurance::lapse_study %>%
     duration = as.integer(duration)
   )
 
-training_data <- filter(data, policy_year < 2011)
+full_training_data <- filter(data, policy_year <= 2010)
+training_data <- filter(full_training_data, policy_year < 2010)
+validation_data <- filter(full_training_data, policy_year == 2010)
 testing_data <- filter(data, policy_year == 2011)
-validation_data <- filter(training_data, policy_year >= 2009)
+
