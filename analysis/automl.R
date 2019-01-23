@@ -7,7 +7,8 @@ rec <- recipe(training_data) %>%
   prep(strings_as_factors = FALSE)
 
 training_h2o <- as.h2o(bake(rec, training_data), "training_data")
-# training_h2o
+validation_h2o <- as.h2o(bake(rec, validation_data), "validation_data")
+
 predictors <- c(
   "gender", "risk_class", "face_amount", "premium_mode", "avg_issue_age", "duration",
   "avg_premium_jump_ratio"
@@ -22,12 +23,14 @@ automl_model <- h2o.automl(
 
 # check for reasonability
 
-predictions <- predict(automl_model, training_h2o) %>%
+predictions <- predict(automl_model, validation_h2o) %>%
   as.data.frame()
 
-training_data %>%
+validation_data %>%
   select(lapse_count_rate, exposure_count) %>%
   cbind(predictions) %>%
   weighted_rmse(truth = "lapse_count_rate", estimate = "predict", weights = "exposure_count")
+
+# [1] 0.1619634
 
 h2o.shutdown()
