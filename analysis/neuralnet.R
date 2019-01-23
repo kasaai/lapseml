@@ -132,8 +132,6 @@ predictions <- predict(
   keras_validation$x
 )
 
-# Summary
-
 validation_data_with_preds <- validation_data %>% bind_cols(
   predictions %>%
     setNames(c("predicted_count_rate", "predicted_amount_rate")) %>%
@@ -142,3 +140,5 @@ validation_data_with_preds <- validation_data %>% bind_cols(
 
 validation_data_with_preds %>%
   weighted_rmse(truth = "lapse_count_rate", estimate = "predicted_count_rate", weights = "exposure_count")
+
+# [1] 0.1716038
