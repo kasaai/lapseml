@@ -1,7 +1,7 @@
 source("analysis/data-prep.R")
 
 mod_form <- lapse_count ~
-  risk_class_mapped + face_amount + premium_mode +
+  risk_class_mapped + face_amount + premium_mode_mapped +
   avg_issue_age +
   I(avg_issue_age ^ 2) + log(avg_issue_age) +
   I((duration - 9) ^ (-1)) + I((duration - 9) ^ (-2)) + I((duration - 9) ^ (-3)) +
@@ -22,4 +22,4 @@ validation_data %>%
   select(lapse_count_rate, predicted_lapse_rate, exposure_count) %>%
   weighted_rmse("lapse_count_rate", "predicted_lapse_rate", "exposure_count")
 
-# [1] 0.1722432
+# [1] 0.1720286

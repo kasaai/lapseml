@@ -56,6 +56,16 @@ risk_class_mapping <- tribble(
   "Agg/Unknown",   "NS"
 )
 
+premium_mode_mapping <- tribble(
+  ~ premium_mode,   ~ premium_mode_mapped,
+  "1. Annual", "Annual",
+  "2. Semiannual", "Semiannual/Quarterly",
+  "3. Quarterly", "Semiannual/Quarterly",
+  "4. Monthly", "Monthly",
+  "5. Biweekly", "Other/Unknown",
+  "6. Unknown/Other", "Other/Unknown"
+)
+
 data <- insurance::lapse_study %>%
   # Keep only duration 10 - 12 data.
   filter(duration %in% c("10", "11", "12")) %>%
@@ -69,6 +79,8 @@ data <- insurance::lapse_study %>%
   left_join(issue_age_mapping, by = c(issue_age = "age_band")) %>%
   # risk class mapping for SOA 2015
   left_join(risk_class_mapping, by = "risk_class") %>%
+  # premium mode mapping for SOA 2015
+  left_join(premium_mode_mapping, by = "premium_mode") %>%
   # Join with premium jump ratio mapping
   left_join(premium_jump_ratio_mapping, by = c(premium_jump_ratio = "premium_jump_ratio_band")) %>%
   mutate(
